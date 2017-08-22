@@ -80,8 +80,8 @@ exports.System = db.model('system', new mongoose.Schema({
         default: []
     },
     sendemaildate: Date,
-    currentuserid: String,
-    currentsharedate: Date
+    nextshareuserid: String,
+    nextsharedate: Date
 }));
 
 

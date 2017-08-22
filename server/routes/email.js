@@ -20,8 +20,8 @@ System.findOne({
             //if (!isSended) {
             //test
             let nextShareUser = _util.getNextShareUserBySys(users, sys);
-            
-            nextShareUser = _util.checkRulesAndReturnUser(nextShareUser, users, sys);
+
+            nextShareUser = _util.checkRulesAndReturnUser(nextShareUser, users, sys);console.log(nextShareUser);
             
             //_util.sendEMail('57242263@163.com', '吴超', new Date());
             //_util.sendEMail(nextShareUser.email, nextShareUser.name, nextShareDate);
@@ -190,15 +190,16 @@ function sendEmailFunc() {
 }
 
 function setShareInfo(user) {
-    console.log(user);
-    System.findOneAndUpdate({
+    System.update({
         name: 'config'
     }, {
         $set: {
             nextshareuserid: user.user._id.toString(),
-            nextsharedate: new Date(user.date)
+            nextsharedate: user.date
         }
-    }, (err, sys) => {});
+    }, (err, sys) => {
+        console.log(err, sys);
+    });
 }
 
 //分享初始化接口
@@ -250,7 +251,7 @@ router.put('/system/sortrules', function (req, res, next) {
             if (sys && Object.keys(sys).length) {
                 getUsers((users, sys) => {
                     let nextShareUser = _util.getNextShareUser(users, sys);
-                    setShareInfo(nextShareUser); 
+                    setShareInfo(nextShareUser);
                     res.json({
                         success: true,
                         msg: '更新成功！'
@@ -507,12 +508,13 @@ var _util = {
      * @param {object} sys   系统配置
      * @return {object} 人员信息对象
      */
-    getNextShareUserBySys(users, sys) {console.log(sys, users.length);
-        let nextShareUser = _util.getUserInfoById(sys.nextshareuserid, users);console.log(nextShareUser);
-        return {
+    getNextShareUserBySys(users, sys) {
+        let nextShareUser = _util.getUserInfoById(sys.nextshareuserid, users);
+        let result = {
             user: nextShareUser,
             date: new Date(sys.nextsharedate)
         };
+        return result;
     },
     /**
      * 获取指定人员的下一个人员信息
