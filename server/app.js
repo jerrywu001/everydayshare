@@ -6,6 +6,7 @@ var webpack = require('webpack');
 var path = require('path');
 var app = express();
 var bodyParser = require('body-parser');
+var history = require('connect-history-api-fallback');
 var routes = require('./routes');
 
 app.use(bodyParser.json());
@@ -22,6 +23,8 @@ app.use(session({
     },
     store: sessionstore.createSessionStore()
 }));
+
+app.use(history());
 
 /** 访问静态资源文件 这里是访问所有dist目录下的静态资源文件 **/
 app.use(express.static(path.resolve(__dirname, '../dist')))
