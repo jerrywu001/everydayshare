@@ -1,7 +1,7 @@
 var exports;
 var mongoose = require('mongoose');
-var db = mongoose.createConnection('localhost', 'test');
-// mongoose.connect('mongodb://tester:123456@127.0.0.1:27017/shareStory?authSource=admin');
+var db = mongoose.createConnection('localhost', 'everydayshare');
+// mongoose.connect('mongodb://tester:123456@127.0.0.1:27017/everydayshare?authSource=admin');
 db.on('error', console.error.bind(console, 'mongodb 连接错误！'));
 db.once('open', () => {
     console.log('mongodb 连接成功！');
