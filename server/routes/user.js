@@ -188,6 +188,13 @@ router.post('/user/name', function (req, res, next) {
 });
 
 router.get('/users', function (req, res, next) {
+    function replcePassword(rows) {
+        for (var i = 0, len = rows.length; i < len; i++) {
+            rows[i].password = '**********';
+        }
+    }
+
+
     System.findOne({
         name: 'config'
     }, (err, doc) => {
@@ -208,6 +215,7 @@ router.get('/users', function (req, res, next) {
 
         User.find().sort(sort).exec((err, row) => {
             if (row && row.length) {
+                replcePassword(row);
                 res.json({
                     success: true,
                     data: row
