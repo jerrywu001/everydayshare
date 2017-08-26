@@ -221,25 +221,32 @@ router.get('/system/sharelist', function (req, res, next) {
 				nextShareUser = _util.checkRulesAndReturnUser(nextShareUser, users, sys);
 				nexter = nextShareUser;
 
-				result.push({
-					title: nexter.user.name,
-					start: new Date(nexter.date).format('yyyy-MM-dd'),
-					color: '#0d70c5'
-				});
-
-				for (let i = 0, len = 14; i < len; i++) {
-					nexter = _util.getNextShareUserByUser(nexter, users, sys);
-					nexter = _util.checkRulesAndReturnUser(nexter, users, sys);
+				if(!nexter || !nexter.user || !Object.keys(nexter.user).length) {
+					res.json({
+						success: false,
+						msg: '请设置初始分享人员！'
+					});
+				} else {
 					result.push({
 						title: nexter.user.name,
 						start: new Date(nexter.date).format('yyyy-MM-dd'),
-						color: '#bfc1c3'
+						color: '#0d70c5'
+					});
+
+					for (let i = 0, len = 14; i < len; i++) {
+						nexter = _util.getNextShareUserByUser(nexter, users, sys);
+						nexter = _util.checkRulesAndReturnUser(nexter, users, sys);
+						result.push({
+							title: nexter.user.name,
+							start: new Date(nexter.date).format('yyyy-MM-dd'),
+							color: '#bfc1c3'
+						});
+					}
+					res.json({
+						success: true,
+						data: result
 					});
 				}
-				res.json({
-					success: true,
-					data: result
-				});
 			});
 		} else {
 			res.json({
@@ -435,7 +442,7 @@ var _util = {
 	slpitUsersArray(users, startUid) {
 		let result = {};
 		for (let i = 0, len = users.length; i <= len; i++) {
-			if (users[i] && users[i]._id.toString() === startUid.toString()) {
+			if (users[i] && startUid && users[i]._id.toString() === startUid.toString()) {
 				result = {
 					a0: users.slice(0, i),
 					a1: users.slice(i)
@@ -576,7 +583,7 @@ var _util = {
 		let nextShareUser = {};
 		let nextShareDay = _util.getNextShareDate(sys, user.date);
 		let sortedUsers = _util.slpitUsersArray(users, user.user._id);
-		nextShareUser = sortedUsers['a1'].concat(sortedUsers['a0'])[1];
+		nextShareUser = sortedUsers['a1']? sortedUsers['a1'].concat(sortedUsers['a0'])[1]: null;
 		return {
 			user: nextShareUser,
 			date: nextShareDay

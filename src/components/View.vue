@@ -52,6 +52,7 @@
                         if (rsp.status === 200 && rsp.data.success && rsp.data.data && rsp.data.data.length) {
                             _this.initCalendar(rsp.data.data);
                         } else {
+                            _this.showSysTip(rsp.data.msg);
                             _this.initCalendar([]);
                         }
                     });
