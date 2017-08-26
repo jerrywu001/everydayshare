@@ -3,17 +3,6 @@ var _global = require('../common/global');
 var express = require('express');
 var router = express.Router();
 
-/**
-var system = new System({
-	startuserid: 65,
-	startsharetime: new Date()
-});
-
-system.save((err, row) => {
-	console.log(err);
-});
-**/
-
 router.get('/system', function (req, res, next) {
     if (_global.session && _global.session.uid) {
         System.find((err, row) => {
