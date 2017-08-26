@@ -53,6 +53,9 @@ const ajax = {
     shareInit(params) {
         return axios.put('/api/v1/system/shareinit', params);
     },
+    shareList() {
+        return axios.get('/api/v1/system/sharelist');
+    },
     sortRules(params) {
         return axios.put('/api/v1/system/sortrules', params);
     },
