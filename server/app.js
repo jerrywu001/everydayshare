@@ -41,7 +41,7 @@ app.all('*', function (req, res, next) {
 
 routes(app);
 
-app.set('port', process.env.PORT || 8088);
+app.set('port', process.env.PORT || 9200);
 app.listen(app.get('port'), function (err) {    
     if (err) {
         console.log(err);
