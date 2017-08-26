@@ -183,12 +183,14 @@ function sendEmailFunc() {
 }
 
 function setShareInfo(user) {
+	let _id = user && user.user && user.user._id? user.user._id.toString(): '';
+
 	System.update({
 		name: 'config'
 	}, {
 		$set: {
-			nextshareuserid: user.user._id.toString(),
-			nextsharedate: user.date
+			nextshareuserid: _id,
+			nextsharedate: user.date || null
 		}
 	}, (err, sys) => {});
 }
@@ -462,7 +464,7 @@ var _util = {
 		let holidays = sys.holiday;
 		let outWorkDays = sys.outworkday;
 		holidays = holidays && Object.keys(holidays[0]).length ? holidays[0] : {};
-		outWorkDays = outWorkDays && Object.keys(outWorkDays[0]).length ? outWorkDays[0] : {};
+		outWorkDays = outWorkDays && outWorkDays[0] && Object.keys(outWorkDays[0]).length ? outWorkDays[0] : {};
 		for (m in holidays) {
 			let days = holidays[m];
 			let start = _util.getNowDateMills(_util.dateStrToDate(m));
@@ -496,13 +498,13 @@ var _util = {
 		let result = {};
 		let sharedDays = [];
 		let sharedDaysLen = 0;
-		let startUid = sys.startuserid || users[0]._id;
+		let startUid = sys.startuserid || (users && users[0]? users[0]._id : '');
 		let prevShareDate = _util.getPrevShareDate(sys);
 		let sortedUsers = _util.slpitUsersArray(users, startUid);
 		let nowDate = _util.getNowDateMills();
 		let totalDays = _util.getTotalDays(sys);
 		let startShareDate = sys && sys.startsharetime ? new Date(sys.startsharetime).getTime() : nowDate;
-		let startuserid = (sys.startuserid || users[0]['_id']).toString();
+		let startuserid = (sys.startuserid || (users && users[0]? users[0]['_id'] : '')).toString();
 		let prevDays = 0;
 
 		if (nowDate === startShareDate) {
@@ -522,7 +524,7 @@ var _util = {
 			prevDays = (nowDate - prevShareDate) / oneDay;
 			sharedDays = _util.getSharedDays(new Date(startShareDate), prevDays + totalDays, sys);
 			sharedDaysLen = sharedDays.length;
-			sortedUsers = sortedUsers['a1'].concat(sortedUsers['a0']).reverse();
+			sortedUsers = sortedUsers && sortedUsers['a1']? sortedUsers['a1'].concat(sortedUsers['a0']).reverse(): [];
 		}
 
 		if (sortedUsers.length < sharedDaysLen) { //已分享天数 > 人员数
@@ -549,10 +551,11 @@ var _util = {
 		let prevShareUser = _util.getPrevShareUser(users, sys);
 		let nextShareDay = _util.getNextShareDate(sys);
 		let commingDays = _util.getTotalDaysFromToday(nextShareDay);
-		let sortedUsers = _util.slpitUsersArray(users, prevShareUser.user._id);
+		let prevUserId = prevShareUser && prevShareUser.user && prevShareUser.user._id? prevShareUser.user._id: '';
+		let sortedUsers = _util.slpitUsersArray(users, prevUserId);
 		let isTodayShareDay = !_util.isNotShareDay(nowDate, sys);
 		let index = isTodayShareDay ? 2 : 1;
-		nextShareUser = sortedUsers['a1'].concat(sortedUsers['a0'])[index];
+		nextShareUser = sortedUsers && sortedUsers['a1']? sortedUsers['a1'].concat(sortedUsers['a0'])[index]: {};
 		return {
 			user: nextShareUser,
 			date: nextShareDay
