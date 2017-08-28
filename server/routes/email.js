@@ -161,10 +161,14 @@ function sendEmailFunc() {
 							console.log('定时任务-邮件发送 start====：' + doc.sendemailtime);
 							let isNotShareDay = _util.isNotShareDay(nowDate, sys);
 							if (!isNotShareDay && sys.nextshareuserid && sys.sortrules && sys.sortrules.length) {
+                                let updateUser = null;
 								let nextShareUser = _util.getNextShareUserBySys(users, sys);
 								nextShareUser = _util.checkRulesAndReturnUser(nextShareUser, users, sys);
-								_util.sendEMail(nextShareUser.user.email, nextShareUser.user.name, nextShareUser.date);
-
+								//_util.sendEMail(nextShareUser.user.email, nextShareUser.user.name, nextShareUser.date);
+                                console.log(nextShareUser);
+                                updateUser = _util.getNextShareUserByUser(nextShareUser, users, sys);console.log(updateUser);
+                                setShareInfo(updateUser);
+                                
 								//update sended mark
 								System.findOneAndUpdate({
 									name: 'config'
