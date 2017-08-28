@@ -164,9 +164,8 @@ function sendEmailFunc() {
                                 let updateUser = null;
 								let nextShareUser = _util.getNextShareUserBySys(users, sys);
 								nextShareUser = _util.checkRulesAndReturnUser(nextShareUser, users, sys);
-								//_util.sendEMail(nextShareUser.user.email, nextShareUser.user.name, nextShareUser.date);
-                                console.log(nextShareUser);
-                                updateUser = _util.getNextShareUserByUser(nextShareUser, users, sys);console.log(updateUser);
+								_util.sendEMail(nextShareUser.user.email, nextShareUser.user.name, nextShareUser.date);
+                                updateUser = _util.getNextShareUserByUser(nextShareUser, users, sys);
                                 setShareInfo(updateUser);
                                 
 								//update sended mark
