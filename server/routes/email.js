@@ -161,12 +161,9 @@ function sendEmailFunc() {
 							console.log('定时任务-邮件发送 start====：' + doc.sendemailtime);
 							let isNotShareDay = _util.isNotShareDay(nowDate, sys);
 							if (!isNotShareDay && sys.nextshareuserid && sys.sortrules && sys.sortrules.length) {
-                                let updateUser = null;
 								let nextShareUser = _util.getNextShareUserBySys(users, sys);
 								nextShareUser = _util.checkRulesAndReturnUser(nextShareUser, users, sys);
 								_util.sendEMail(nextShareUser.user.email, nextShareUser.user.name, nextShareUser.date);
-                                updateUser = _util.getNextShareUserByUser(nextShareUser, users, sys);
-                                setShareInfo(updateUser);
                                 
 								//update sended mark
 								System.findOneAndUpdate({
@@ -183,6 +180,25 @@ function sendEmailFunc() {
 			}
 		}
 	});
+}
+
+function updateNextShareUser(users, sys) {
+	let nowDate = new Date();
+	nowDate = nowDate.format('hh:mm');
+	if (nowDate === '22:30') {
+		System.find({
+			name: 'config'
+		}, (err, sys) => {
+			if (sys && Object.keys(sys).length) {
+				getUsers((users, sys) => {
+					let nextShareUser = _util.getNextShareUserBySys(users, sys);
+					let updateUser = _util.getNextShareUserByUser(nextShareUser, users, sys);
+					updateUser = _util.checkRulesAndReturnUser(updateUser, users, sys);
+					setShareInfo(updateUser);
+				});
+			}
+		});
+	}
 }
 
 function setShareInfo(user) {
@@ -210,11 +226,12 @@ router.get('/system/sharelist', function (req, res, next) {
 				let result = [];
 				let nexter = null;
 				let isShareDay = !_util.isNotShareDay(new Date(), sys);
-				let prevUser = isShareDay ? _util.getPrevShareUser(users, sys) : null;
 				let nextShareUser = _util.getNextShareUserBySys(users, sys);
+				let prevUser = null;
 
-				if (prevUser) {
-					prevUser = _util.getNextShareUserByUser(prevUser, users, sys);
+				if (isShareDay) {
+					prevUser = _util.getPrevShareUserByUser(users, sys, nextShareUser);
+
 					result.push({
 						title: prevUser.user.name,
 						start: new Date(prevUser.date).format('yyyy-MM-dd'),
@@ -540,6 +557,15 @@ var _util = {
 		return {
 			user: result,
 			date: new Date(startShareDate)
+		};
+	},
+	getPrevShareUserByUser(users, sys, user) {
+		let _date = null;
+		let splitUsers = _util.slpitUsersArray(users, user.user.id);
+		splitUsers = (splitUsers['a1'] || []).concat(splitUsers['a0'] || []);
+		return {
+			user: splitUsers[splitUsers.length - 1],
+			date: _util.getPrevShareDate(sys, user.date)
 		};
 	},
 	/**
@@ -891,6 +917,7 @@ var _util = {
 //定时任务入口
 setInterval(() => {
 	sendEmailFunc();
+	updateNextShareUser();
 }, 60 * 1000);
 
 module.exports = router;
