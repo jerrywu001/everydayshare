@@ -233,7 +233,7 @@ router.get('/system/sharelist', function (req, res, next) {
 					prevUser = _util.getPrevShareUserByUser(users, sys, nextShareUser);
 
 					result.push({
-						title: prevUser.user.name,
+						title: prevUser.user && prevUser.user.name? prevUser.user.name : '',
 						start: new Date(prevUser.date).format('yyyy-MM-dd'),
 						color: '#bfc1c3'
 					});
