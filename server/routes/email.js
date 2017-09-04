@@ -190,12 +190,15 @@ function updateNextShareUser(users, sys) {
 			name: 'config'
 		}, (err, sys) => {
 			if (sys && Object.keys(sys).length) {
-				getUsers((users, sys) => {
-					let nextShareUser = _util.getNextShareUserBySys(users, sys);
-					let updateUser = _util.getNextShareUserByUser(nextShareUser, users, sys);
-					updateUser = _util.checkRulesAndReturnUser(updateUser, users, sys);
-					setShareInfo(updateUser);
-				});
+				let isNotShareDay = _util.isNotShareDay(new Date(), sys);
+				if (!isNotShareDay) {
+					getUsers((users, sys) => {
+						let nextShareUser = _util.getNextShareUserBySys(users, sys);
+						let updateUser = _util.getNextShareUserByUser(nextShareUser, users, sys);
+						updateUser = _util.checkRulesAndReturnUser(updateUser, users, sys);
+						setShareInfo(updateUser);
+					});
+				}
 			}
 		});
 	}
