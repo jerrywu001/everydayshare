@@ -182,15 +182,15 @@ function sendEmailFunc() {
 	});
 }
 
-function updateNextShareUser(users, sys) {
+function updateNextShareUser() {
 	let nowDate = new Date();
 	nowDate = nowDate.format('hh:mm');
-	if (nowDate === '22:30') {
+	if (nowDate === '22:00') {
 		System.find({
 			name: 'config'
-		}, (err, sys) => {
-			if (sys && Object.keys(sys).length) {
-				let isNotShareDay = _util.isNotShareDay(new Date(), sys);
+		}, (err, doc) => {
+			if (doc && Object.keys(doc).length) {
+				let isNotShareDay = _util.isNotShareDay(new Date(), doc[0]);
 				if (!isNotShareDay) {
 					getUsers((users, sys) => {
 						let nextShareUser = _util.getNextShareUserBySys(users, sys);
@@ -427,9 +427,10 @@ var _util = {
 	 */
 	isNotShareDay(date, sys) {
 		let flag = true;
+		let day = new Date(date).getDay() === 0 ? 7 : new Date(date).getDay();
 		let rules = sys.sortrules || [];
 		for (let i = 0, len = rules.length; i < len; i++) {
-			if (rules[i] === (new Date(date).getDay() === 0 ? 7 : new Date(date).getDay())) {
+			if (rules[i] === day) {
 				flag = false;
 				break;
 			}
