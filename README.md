@@ -7,10 +7,13 @@
 # install dependencies
 npm install
 
-# serve with express load at localhost:3000
+# init database
+npm run init
+
+# serve with express load at localhost:9200
 npm run server
 
-# serve with hot reload at localhost:8080
+# serve with hot reload at localhost:8090
 npm run dev
 
 # build for production with minification
