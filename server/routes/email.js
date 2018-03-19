@@ -388,7 +388,8 @@ var _util = {
 			text: userName + _util.getMailText(shareDate),
 			html: `<div style="padding: 2px 50px;">
                     <p>${userName}${_util.getMailText(shareDate)}</p>
-                    <img src="//img.aimoge.com/FuDtKJnZ95One-tcdPKwul0ulhBX"/>    
+                    <img src="//img.aimoge.com/FuDtKJnZ95One-tcdPKwul0ulhBX"/>
+                    <p>具体日程参加：<a href="http://172.30.6.50:9200" target="_blank">http://172.30.6.50:9200</a></p>
                 </div>`
 		};
 	},
