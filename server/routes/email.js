@@ -470,7 +470,7 @@ var _util = {
 	isHoliday(date, sys) {
 		let flag = false;
 		let nowDate = _util.getNowDateMills();
-        let dateStr0 = new Date(nowDate + oneDay).format('yyyy-MM-dd');
+        let dateStr0 = new Date(nowDate).format('yyyy-MM-dd');
         let dateStr = new Date(nowDate + oneDay).format('yyyy-MM-dd');
         let holidays = sys.holiday || [];
         const result = [];
