@@ -639,7 +639,7 @@ var _util = {
 		let commingDays = _util.getTotalDaysFromToday(nextShareDay);
 		let prevUserId = prevShareUser && prevShareUser.user && prevShareUser.user._id? prevShareUser.user._id: '';
 		let sortedUsers = _util.slpitUsersArray(users, prevUserId);
-		let isTodayShareDay = !_util.isNotShareDay(nowDate, sys) && !_util.isHoliday(nowDate, sys);
+		let isTodayShareDay = !_util.isNotShareDay(nowDate, sys);
 		let index = isTodayShareDay ? 2 : 1;
 		nextShareUser = sortedUsers && sortedUsers['a1']? sortedUsers['a1'].concat(sortedUsers['a0'])[index]: {};
 		return {
