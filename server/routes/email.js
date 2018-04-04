@@ -160,7 +160,11 @@ function sendEmailFunc() {
 						} else {
 							console.log('定时任务-邮件发送 start====：' + doc.sendemailtime);
 							let isNotShareDay = _util.isNotShareDay(nowDate, sys);
-							if (!isNotShareDay && sys.nextshareuserid && sys.sortrules && sys.sortrules.length) {
+                            if (isNotShareDay) {
+                                console.log('今天不是工作日，没有分享安排！');
+                                return;
+                            }
+							if (sys.nextshareuserid && sys.sortrules && sys.sortrules.length) {
 								let nextShareUser = _util.getNextShareUserBySys(users, sys);
 								nextShareUser = _util.checkRulesAndReturnUser(nextShareUser, users, sys);
 								_util.sendEMail(nextShareUser.user.email, nextShareUser.user.name, nextShareUser.date);
@@ -428,14 +432,33 @@ var _util = {
 	 */
 	isNotShareDay(date, sys) {
 		let flag = true;
+        let dateStr = new Date(date).format('yyyy-MM-dd');
 		let day = new Date(date).getDay() === 0 ? 7 : new Date(date).getDay();
 		let rules = sys.sortrules || [];
+        let holidays = sys.holiday || [];
+        const result = [];
 		for (let i = 0, len = rules.length; i < len; i++) {
 			if (rules[i] === day) {
 				flag = false;
 				break;
 			}
 		}
+        for (const m in holidays) {
+			let days = holidays[m];
+			let start = _util.getNowDateMills(_util.dateStrToDate(m));
+			for (let i = 0; i < days; i++) {
+				let newDate = start + i * oneDay;
+				if (newDate > nowDate) {
+					result.push(new Date(newDate).format('yyyy-MM-dd'));
+				}
+			}
+		}
+        for (const str of result) {
+            if (dateStr === str) {
+				flag = false;
+				break;
+            }
+        }
 		return flag;
 	},
 	/**
