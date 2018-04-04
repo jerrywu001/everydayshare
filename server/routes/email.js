@@ -162,6 +162,21 @@ function sendEmailFunc() {
 							let isNotShareDay = _util.isNotShareDay(nowDate, sys);
                             if (isNotShareDay) {
                                 console.log('今天不是工作日，没有分享安排！');
+                                // send message to admin
+                                let transporter = _util.getMmailer();
+                                transporter.sendMail({
+                                    from: 'wuchao@zqykj.com',
+                                    to: 'wuchao@zqykj.com',
+                                    subject: '每日分享提醒',
+                                    text: '今天不是工作日，没有分享安排！',
+                                    html: `<div style="padding: 2px 50px;">今天不是工作日，没有分享安排！</div>`
+                                }, function (error, info) {
+                                    if (error) {
+                                        console.log('邮件发送失败：' + error);
+                                    } else {
+                                        console.log('邮件发送: ' + info.response);
+                                    }
+                                });
                                 return;
                             }
 							if (sys.nextshareuserid && sys.sortrules && sys.sortrules.length) {
