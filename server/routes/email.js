@@ -445,17 +445,15 @@ var _util = {
 			}
 		}
 		holidays = holidays && Object.keys(holidays[0]).length ? holidays[0] : {};
-        console.log(holidays);
         for (const m in holidays) {
 			let days = holidays[m];
 			let start = _util.getNowDateMills(_util.dateStrToDate(m));
 			for (let i = 0; i < days; i++) {
 				let newDate = start + i * oneDay;
-				if (newDate > nowDate) {
-					result.push(new Date(newDate).format('yyyy-MM-dd'));
-				}
+				result.push(new Date(newDate).format('yyyy-MM-dd'));
 			}
 		}
+        console.log(result);
         for (const str of result) {
             if (dateStr === str) {
 				flag = false;
