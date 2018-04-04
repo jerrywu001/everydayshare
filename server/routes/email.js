@@ -470,8 +470,7 @@ var _util = {
 	isHoliday(date, sys) {
 		let flag = false;
 		let nowDate = _util.getNowDateMills();
-        let dateStr0 = new Date(nowDate).format('yyyy-MM-dd');
-        let dateStr = new Date(nowDate + oneDay).format('yyyy-MM-dd');
+        let dateStr = new Date(nowDate).format('yyyy-MM-dd');
         let holidays = sys.holiday || [];
         const result = [];
 		holidays = holidays && Object.keys(holidays[0]).length ? holidays[0] : {};
@@ -483,9 +482,8 @@ var _util = {
 				result.push(new Date(newDate).format('yyyy-MM-dd'));
 			}
 		}
-        console.log(result, dateStr0, dateStr);
         for (const str of result) {
-            if (dateStr === str || dateStr0 === str) { // 节假日，不发邮件
+            if (dateStr === str) { // 节假日，不发邮件
 				flag = true;
 				break;
             }
