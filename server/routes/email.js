@@ -444,6 +444,7 @@ var _util = {
 				break;
 			}
 		}
+        console.log(holidays);
         for (const m in holidays) {
 			let days = holidays[m];
 			let start = _util.getNowDateMills(_util.dateStrToDate(m));
@@ -454,10 +455,10 @@ var _util = {
 				}
 			}
 		}
-        console.log(result);
         for (const str of result) {
             if (dateStr === str) {
 				flag = false;
+                console.log('okokokok');
 				break;
             }
         }
