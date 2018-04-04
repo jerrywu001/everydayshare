@@ -454,6 +454,7 @@ var _util = {
 				}
 			}
 		}
+        console.log(result);
         for (const str of result) {
             if (dateStr === str) {
 				flag = false;
