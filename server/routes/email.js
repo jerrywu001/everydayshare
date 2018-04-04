@@ -483,6 +483,7 @@ var _util = {
 				result.push(new Date(newDate).format('yyyy-MM-dd'));
 			}
 		}
+        console.log(result, dateStr0, dateStr);
         for (const str of result) {
             if (dateStr === str || dateStr0 === str) { // 节假日，不发邮件
 				flag = true;
