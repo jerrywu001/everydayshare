@@ -448,7 +448,7 @@ var _util = {
 	isNotShareDay(date, sys) {
 		let flag = true;
 		let nowDate = _util.getNowDateMills();
-        let dateStr = new Date(date).format('yyyy-MM-dd');
+        let dateStr = new Date(new Date(date).getTime() + oneDay).format('yyyy-MM-dd');
 		let day = new Date(date).getDay() === 0 ? 7 : new Date(date).getDay();
 		let rules = sys.sortrules || [];
         let holidays = sys.holiday || [];
