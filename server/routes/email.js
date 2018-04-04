@@ -210,7 +210,7 @@ function updateNextShareUser() {
 			name: 'config'
 		}, (err, doc) => {
 			if (doc && Object.keys(doc).length) {
-				let isInholiday = _util.isInHoliday(new Date(), doc[0]);
+				let isInholiday = _util.isHoliday(new Date(), doc[0]);
 				let isNotShareDay = _util.isNotShareDay(new Date(), doc[0]);
 				if (!isNotShareDay && !isInholiday) {
 					getUsers((users, sys) => {
@@ -249,7 +249,7 @@ router.get('/system/sharelist', function (req, res, next) {
 			getUsers((users, sys) => {
 				let result = [];
 				let nexter = null;
-				let isInholiday = _util.isInHoliday(new Date(), sys);
+				let isInholiday = _util.isHoliday(new Date(), sys);
 				let isShareDay = !_util.isNotShareDay(new Date(), sys);
 				let nextShareUser = _util.getNextShareUserBySys(users, sys);
 				let prevUser = null;
@@ -639,7 +639,7 @@ var _util = {
 		let commingDays = _util.getTotalDaysFromToday(nextShareDay);
 		let prevUserId = prevShareUser && prevShareUser.user && prevShareUser.user._id? prevShareUser.user._id: '';
 		let sortedUsers = _util.slpitUsersArray(users, prevUserId);
-		let isTodayShareDay = !_util.isNotShareDay(nowDate, sys) && !_util.isInholiday(nowDate, sys);
+		let isTodayShareDay = !_util.isNotShareDay(nowDate, sys) && !_util.isHoliday(nowDate, sys);
 		let index = isTodayShareDay ? 2 : 1;
 		nextShareUser = sortedUsers && sortedUsers['a1']? sortedUsers['a1'].concat(sortedUsers['a0'])[index]: {};
 		return {
