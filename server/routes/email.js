@@ -453,11 +453,9 @@ var _util = {
 				result.push(new Date(newDate).format('yyyy-MM-dd'));
 			}
 		}
-        console.log(result);
         for (const str of result) {
-            if (dateStr === str) {
-				flag = false;
-                console.log('okokokok');
+            if (dateStr === str) { // 节假日，不发邮件
+				flag = true;
 				break;
             }
         }
