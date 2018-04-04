@@ -444,6 +444,7 @@ var _util = {
 				break;
 			}
 		}
+		holidays = holidays && Object.keys(holidays[0]).length ? holidays[0] : {};
         console.log(holidays);
         for (const m in holidays) {
 			let days = holidays[m];
