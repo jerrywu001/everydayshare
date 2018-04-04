@@ -159,8 +159,9 @@ function sendEmailFunc() {
 							console.log('今天已发送过邮件通知了！');
 						} else {
 							console.log('定时任务-邮件发送 start====：' + doc.sendemailtime);
+                            let isInHoliday =  _util.isHoliday(nowDate, sys);
 							let isNotShareDay = _util.isNotShareDay(nowDate, sys);
-                            if (isNotShareDay) {
+                            if (isNotShareDay || isInHoliday) {
                                 console.log('今天不是工作日，没有分享安排！');
                                 // send message to admin
                                 let transporter = _util.getMmailer();
@@ -209,8 +210,9 @@ function updateNextShareUser() {
 			name: 'config'
 		}, (err, doc) => {
 			if (doc && Object.keys(doc).length) {
+				let isInholiday = _util.isInHoliday(new Date(), doc[0]);
 				let isNotShareDay = _util.isNotShareDay(new Date(), doc[0]);
-				if (!isNotShareDay) {
+				if (!isNotShareDay && !isInholiday) {
 					getUsers((users, sys) => {
 						let nextShareUser = _util.getNextShareUserBySys(users, sys);
 						let updateUser = _util.getNextShareUserByUser(nextShareUser, users, sys);
@@ -247,11 +249,12 @@ router.get('/system/sharelist', function (req, res, next) {
 			getUsers((users, sys) => {
 				let result = [];
 				let nexter = null;
+				let isInholiday = _util.isInHoliday(new Date(), sys);
 				let isShareDay = !_util.isNotShareDay(new Date(), sys);
 				let nextShareUser = _util.getNextShareUserBySys(users, sys);
 				let prevUser = null;
 
-				if (isShareDay) {
+				if (isShareDay && !isInholiday) {
 					prevUser = _util.getPrevShareUserByUser(users, sys, nextShareUser);
 
 					result.push({
@@ -447,11 +450,8 @@ var _util = {
 	 */
 	isNotShareDay(date, sys) {
 		let flag = true;
-		let nowDate = _util.getNowDateMills();
-        let dateStr = new Date(new Date(date).getTime() + oneDay).format('yyyy-MM-dd');
 		let day = new Date(date).getDay() === 0 ? 7 : new Date(date).getDay();
 		let rules = sys.sortrules || [];
-        let holidays = sys.holiday || [];
         const result = [];
 		for (let i = 0, len = rules.length; i < len; i++) {
 			if (rules[i] === day) {
@@ -459,6 +459,20 @@ var _util = {
 				break;
 			}
 		}
+		return flag;
+	},
+	/**
+	 * 判断明天是否是节假期
+	 * @param {date} date 日期
+	 * @param {object} sys  系统配置
+	 * @return {boolean} 布尔值
+	 */
+	isHoliday(date, sys) {
+		let flag = false;
+		let nowDate = _util.getNowDateMills();
+        let dateStr = new Date(nowDate + oneDay).format('yyyy-MM-dd');
+        let holidays = sys.holiday || [];
+        const result = [];
 		holidays = holidays && Object.keys(holidays[0]).length ? holidays[0] : {};
         for (const m in holidays) {
 			let days = holidays[m];
@@ -625,7 +639,7 @@ var _util = {
 		let commingDays = _util.getTotalDaysFromToday(nextShareDay);
 		let prevUserId = prevShareUser && prevShareUser.user && prevShareUser.user._id? prevShareUser.user._id: '';
 		let sortedUsers = _util.slpitUsersArray(users, prevUserId);
-		let isTodayShareDay = !_util.isNotShareDay(nowDate, sys);
+		let isTodayShareDay = !_util.isNotShareDay(nowDate, sys) && !_util.isInholiday(nowDate, sys);
 		let index = isTodayShareDay ? 2 : 1;
 		nextShareUser = sortedUsers && sortedUsers['a1']? sortedUsers['a1'].concat(sortedUsers['a0'])[index]: {};
 		return {
