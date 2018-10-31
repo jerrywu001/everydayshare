@@ -1,6 +1,6 @@
 var api = '/api/v1';
 var express = require('express');
-var router = express.Router();
+express.Router();
 
 module.exports = function (app) {
     app.use(api, require('./email'));

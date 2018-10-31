@@ -1,10 +1,9 @@
 var System = require('../lib/db').System;
-var _global = require('../common/global');
 var express = require('express');
 var router = express.Router();
 
 router.get('/system', function (req, res, next) {
-    if (_global.session && _global.session.uid) {
+    if (req.session && req.session.uid) {
         System.find((err, row) => {
             if (row && row.length) {
                 res.json({

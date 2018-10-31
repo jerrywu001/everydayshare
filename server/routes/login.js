@@ -1,5 +1,4 @@
 var User = require('../lib/db').User;
-var _global = require('../common/global');
 var express = require('express');
 var router = express.Router();
 
@@ -14,12 +13,11 @@ router.post('/login', function (req, res, next) {
             password: pwd
         }, (err, doc) => {
             if (doc && Object.keys(doc).length) {
-                _global.session = {};
-                _global.session.uid = doc._id;
-                _global.session.role = doc.role;
-                _global.session.name = doc.name;
-                _global.session.username = doc.username;
-                _global.session.avator = doc.avator;
+                req.session.uid = doc._id;
+                req.session.role = doc.role;
+                req.session.name = doc.name;
+                req.session.username = doc.username;
+                req.session.avator = doc.avator;
 
                 res.json({
                     success: true,
@@ -41,14 +39,14 @@ router.post('/login', function (req, res, next) {
 });
 
 router.get('/login/check', function (req, res, next) {
-    if (_global.session.uid) {
+    if (req.session.uid) {
         res.json({
             success: true,
-            uid: _global.session.uid,
-            role: _global.session.role,
-            name: _global.session.name,
-            username: _global.session.username,
-            avator: _global.session.avator
+            uid: req.session.uid,
+            role: req.session.role,
+            name: req.session.name,
+            username: req.session.username,
+            avator: req.session.avator
         });
     } else {
         res.json({
@@ -59,12 +57,11 @@ router.get('/login/check', function (req, res, next) {
 });
 
 router.get('/logout', function (req, res, next) {
-    _global.session = {};
-    _global.session.uid = null;
-    _global.session.role = null;
-    _global.session.name = null;
-    _global.session.username = null;
-    _global.session.avator = null;
+    req.session.uid = null;
+    req.session.role = null;
+    req.session.name = null;
+    req.session.username = null;
+    req.session.avator = null;
 
     res.json({
         success: true,

@@ -1,15 +1,14 @@
 var User = require('../lib/db').User;
 var System = require('../lib/db').System;
-var _global = require('../common/global');
 var express = require('express');
 var router = express.Router();
 
 router.get('/user', function (req, res, next) {
     var data = req.body;
 
-    if (_global.session && _global.session.uid) {
+    if (req.session && req.session.uid) {
         User.findOne({
-            _id: _global.session.uid
+            _id: req.session.uid
         }, (err, doc) => {
             if (doc && Object.keys(doc).length) {
                 res.json({
@@ -40,15 +39,15 @@ router.put('/user/replaceshare', function (req, res, next) {
             msg: '请选择替换人员！'
         });
     } else {
-        if (_global.session && _global.session.uid) {
+        if (req.session && req.session.uid) {
             User.findOne({
-                _id: _global.session.uid
+                _id: req.session.uid
             }, (err, doc) => {
                 if (doc && Object.keys(doc).length) {
                     let replaceno = data.replaceno === 'cancel' ? '' : (data.replaceno || '');
 
                     User.update({
-                        _id: _global.session.uid
+                        _id: req.session.uid
                     }, {
                         $set: {
                             replaceno: replaceno
@@ -91,13 +90,13 @@ router.put('/user/setoutworkday', function (req, res, next) {
             msg: '请填写必选项！'
         });
     } else {
-        if (_global.session && _global.session.uid) {
+        if (req.session && req.session.uid) {
             User.findOne({
-                _id: _global.session.uid
+                _id: req.session.uid
             }, (err, doc) => {
                 if (doc && Object.keys(doc).length) {
                     User.update({
-                        _id: _global.session.uid
+                        _id: req.session.uid
                     }, {
                         $set: {
                             outworkdate: data.outworkdate || new Date(),
@@ -462,7 +461,7 @@ router.put('/user/avator', function (req, res, next) {
             }
         }, (err, doc) => {
             if (doc && Object.keys(doc).length) {
-                _global.session.avator = avator;
+                req.session.avator = avator;
                 res.json({
                     success: true,
                     msg: '更新成功！'

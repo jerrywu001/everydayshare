@@ -1,13 +1,18 @@
 var exports;
 var mongoose = require('mongoose');
-var db = mongoose.createConnection('localhost', 'everydayshare');
+mongoose.connect('mongodb://localhost:27017/everydayshare', {
+    useNewUrlParser: true
+}).then(
+    () => {
+        console.log('mongodb 连接成功！');
+    },
+    (err) => {
+        console.log(err, 'mongodb 连接错误！');
+    }
+);
 // mongoose.connect('mongodb://tester:123456@127.0.0.1:27017/everydayshare?authSource=admin');
-db.on('error', console.error.bind(console, 'mongodb 连接错误！'));
-db.once('open', () => {
-    console.log('mongodb 连接成功！');
-});
 
-exports.User = db.model('user', new mongoose.Schema({
+exports.User = mongoose.model('user', new mongoose.Schema({
     sort: Number,
     worknumber: String,
     name: String,
@@ -42,7 +47,7 @@ exports.User = db.model('user', new mongoose.Schema({
     }
 }));
 
-exports.System = db.model('system', new mongoose.Schema({
+exports.System = mongoose.model('system', new mongoose.Schema({
     name: {
         type: String,
         default: 'config'
