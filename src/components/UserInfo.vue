@@ -21,6 +21,7 @@
 				<el-upload
 					class="avatar-uploader"
 					action="/api/v1/uploadAvator"
+					accept=".jpg,.jpeg,.gif,.png"
 					:disabled="uploadDisabled"
 					:show-file-list="false"
 					:on-error="handleAvatarError"
