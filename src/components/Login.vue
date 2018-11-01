@@ -7,11 +7,11 @@
 		<div class="htmleaf-container">
 			<div class="wrapper">
 				<div class="container">
-					<form class="form">
+					<div class="form">
 						<input type="text" v-model="username" placeholder="用户名" autocomplete="false">
 						<input type="password" v-model="password" placeholder="密码" autocomplete="false">
 						<button type="submit" id="login-button" @click="login" :disabled="invalid">登录</button>
-					</form>
+					</div>
 				</div>
 				
 				<ul class="bg-bubbles">
